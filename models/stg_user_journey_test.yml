@@ -1,0 +1,53 @@
+
+unit_tests:
+  - name: stg_user_journey_basic_truncation
+    description: "Check timestamp → event_hour/date and pass-through fields."
+    model: stg_user_journey_SX
+    overrides:
+      macros:
+        is_incremental: false
+    given:
+      - input: source('de_project', 'user_journey')
+        rows:
+          - {user_id: a1b1c1,
+            product_id: prod-11111,
+            search_event_id: 10,
+            session_id: 'abc-1',
+            timestamp: '2024-07-14T06:48:22.000+0000',
+            search_terms: 'Bread',
+            search_terms_type: 'manual search',
+            search_model: 'default',
+            search_type: 'product:grocery',
+            search_feature: 'organic',
+            search_results_count: 12,
+            has_qv: true,
+            has_pdp: false,
+            has_atc: false,
+            has_purchase: false,
+            mkt_campaign: 'summer_promo',
+            mkt_source: 'google',
+            mkt_medium: 'social',
+            mkt_content: 'demo'}
+    expect:
+      rows:
+        - {user_id: a1b1c1,
+            product_id: prod-11111,
+            search_event_id: 10,
+            session_id: 'abc-1',
+            timestamp: '2024-07-14T06:48:22.000+0000',
+            event_hour: '2024-07-14T06:00:00.000+0000',
+            event_date: '2024-07-14T00:00:00.000+0000',
+            search_terms: 'Bread',
+            search_terms_type: 'manual search',
+            search_model: 'default',
+            search_type: 'product:grocery',
+            search_feature: 'organic',
+            search_results_count: 12,
+            has_qv: true,
+            has_pdp: false,
+            has_atc: false,
+            has_purchase: false,
+            mkt_campaign: 'summer_promo',
+            mkt_source: 'google',
+            mkt_medium: 'social',
+            mkt_content: 'demo'}

@@ -1,0 +1,77 @@
+version: 2
+
+unit_tests:
+  - name: join_filter_marketing_opt_in_test
+    description: "Check that only users with marketing_opt_in = true and matching user_id are kept."
+    model: fact_campaign_effect_SX
+
+    # Run as full-refresh in the test (ignore incremental branch)
+    overrides:
+      macros:
+        is_incremental: false
+
+    given:
+      # Mock data for stg_user_journey_SX (the left side of the join)
+      - input: "ref('stg_user_journey_SX')"
+        rows:
+          # user 1: should be kept (opted in)
+          - user_id: 1
+            search_event_id: 10
+            session_id: "sess-a"
+            product_id: "prod-1"
+            event_hour: "2024-07-14T06:00:00.000+0000"
+            mkt_campaign: "summer"
+            mkt_source: "google"
+            mkt_medium: "social"
+            mkt_content: "ad1"
+            has_atc: true
+            has_purchase: false
+
+          # user 2: should be filtered out (opted out)
+          - user_id: 2
+            search_event_id: 11
+            session_id: "sess-b"
+            product_id: "prod-2"
+            event_hour: "2024-07-14T07:00:00.000+0000"
+            mkt_campaign: "summer"
+            mkt_source: "email"
+            mkt_medium: "email"
+            mkt_content: "ad2"
+            has_atc: false
+            has_purchase: true
+
+          # user 3: should be filtered out (no matching user_data row)
+          - user_id: 3
+            search_event_id: 12
+            session_id: "sess-c"
+            product_id: "prod-3"
+            event_hour: "2024-07-14T08:00:00.000+0000"
+            mkt_campaign: "summer"
+            mkt_source: "direct"
+            mkt_medium: "direct"
+            mkt_content: "ad3"
+            has_atc: false
+            has_purchase: false
+
+      # Mock data for source('de_project','user_data') (the right side of the join)
+      - input: "source('de_project', 'user_data')"
+        rows:
+          - user_id: 1
+            marketing_opt_in: true      # should pass filter
+          - user_id: 2
+            marketing_opt_in: false     # should be filtered out
+          # note: no row for user_id 3 → join filters them out
+
+    expect:
+      rows:
+        - user_id: 1
+          search_event_id: 10
+          session_id: "sess-a"
+          product_id: "prod-1"
+          event_hour: 2024-07-14T06:00:00.000+0000
+          mkt_campaign: "summer"
+          mkt_source: "google"
+          mkt_medium: "social"
+          mkt_content: "ad1"
+          has_atc: true
+          has_purchase: false

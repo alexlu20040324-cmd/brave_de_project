@@ -1,0 +1,48 @@
+unit_tests:
+  - name: fact_product_aggregate_test
+    description: "Check product aggregate fields calculation"
+    model: fact_product_aggregate_SX
+    overrides:
+      macros:
+        is_incremental: false
+    given:
+      - input: "ref('stg_user_journey_SX')"
+        rows:
+          # Row 1: full engagement + purchase
+          - product_id: "prod-1"
+            event_date: "2024-07-14"
+            search_event_id: 1
+            has_atc: true
+            has_purchase: true
+            has_pdp: true
+            has_qv: false
+
+          # Row 2: no engagement (no PDP, no ATC, no purchase)
+          - product_id: "prod-1"
+            event_date: "2024-07-14"
+            search_event_id: 2
+            has_atc: false
+            has_purchase: false
+            has_pdp: false
+            has_qv: false
+
+          # Row 3: views only, no purchase
+          - product_id: "prod-1"
+            event_date: "2024-07-14"
+            search_event_id: 3
+            has_atc: false
+            has_purchase: false
+            has_pdp: true
+            has_qv: true
+
+    expect:
+      rows:
+        - product_id: "prod-1"
+          event_date: "2024-07-14"
+          search_count: 3                 # 3 search_event_id values
+          atc_count: 1                    # only row 1 has_atc = true
+          amount_sold: 1                  # only row 1 has_purchase = true
+          pdp_view_count: 2               # rows 1 and 3
+          qv_view_count: 1                # only row 3
+          no_engagement_count: 1          # only row 2 (no PDP, no ATC)
+          purchase_from_pdp_count: 1      # row 1 has_purchase AND has_pdp

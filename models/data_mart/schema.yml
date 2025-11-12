@@ -1,34 +1,217 @@
 version: 2
 
 models:
-  - name: fact_user_engagement  # Replace with your actual model name
-    description: "fact user engagement on user_id, product_id, serach_event_id, timestamp level"
+  - name: dim_product_SX
     columns:
-      - name: user_id
-        description: "Unique identifier for the user"
+      - name: product_id
+        description: "Product identifier from product_data"
+        tests: 
+          - not_null 
+      - name: product_name
+        description: "Name of product from product_data"
+      - name: product_category
+        description: "Category of product from product_data"
+      - name: price
+        description: "Price of product from product_data"
+      - name: manufacturing_date
+        description: "date of manufacturing from product_data"
+      - name: expiration_date
+        description: "date of expiration from product_data"
+      - name: discount_percentage
+        description: "discount percentage from product_data"
+
+  - name: dim_inventory_SX
+    columns:
+      - name: inventory_id
+        description: "Inventory identifier from inventory_data"
         tests:
           - not_null
       - name: product_id
-        description: "Unique identifier for the product"
+        description: "Product identifier from inventory_data"
+        tests:
+          - not_null
+      - name: warehouse_id
+        description: "Warehouse identifier from inventory_data"
+        tests:
+          - not_null
+      - name: stock_level
+        description: "Stock level from inventory_data"
+      - name: restock_date
+        description: "Scheduled Restock date from inventory_data"
+      - name: last_restock_date
+        description: "Last restock date from inventory_data"
+      - name: next_restock_date
+        description: "Next restock date from inventory_data"
+      - name: inventory_status
+        description: "Stock status from inventory_data"
+      - name: quantity_in_stock
+        description: "Quantity in stock from inventory_data"
+      - name: average_monthly_demand
+        description: "Average monthly demand from inventory_data"
+
+  - name: dim_user_data_SX
+    columns:
+      - name: user_id
+        description: "Unique identifier for each user from user_data"
+        tests:
+          - not_null
+      - name: first_name
+      - name: last_name
+      - name: email
+        description:  "Email address of the user from user_data"
+        tests:
+          - not_null
+      - name: signup_date
+        description: "Date when the user signed up from user_data"
+      - name: preferred_language
+        description: "Preferred language of the user from user_data"
+      - name: DOB
+        description: "Date of birth of the user from user_data"
+      - name: marketing_opt_in
+        description: "Indicates if the user has opted in for marketing communications from user_data"
+        tests:
+          - not_null
+      - name: account_status
+        description: "Current status of the user's account from user_data"
+      - name: loyalty_points_balance
+        description: "Current balance of loyalty points for the user from user_data"
+
+  - name: dim_user_env_SX
+    columns:
+      - name: user_id
+        description: "Unique identifier for each user form user_journey"
+        tests:
+          - not_null
+      - name: session_id
+        description: "Unique identifier for each session from user_journey"
+        tests:
+          - not_null
+      - name: device_class
+        description: "Class of device used by the user from user_journey"
+      - name: dvce_screenwidth
+        description: "Screen width of the device used by the user from user_journey"
+      - name: dvce_screenheight
+        description: "Screen height of the device used by the user from user_journey"
+      - name: page_language
+        description: "Language of the page viewed by the user from user_journey"
+      - name: geo_country
+        description: "Country of the user from user_journey"
+      - name: geo_region
+        description: "Region of the user from user_journey"
+      - name: geo_city
+        description: "City of the user from user_journey"
+
+  - name: fact_product_performance_SX
+    columns:
+      - name: user_id
+        description: "User identifier from staged user_journey"
         tests:
           - not_null
       - name: search_event_id
-        description: "Unique identifier for the search event"
+        description: "Search event identifier from staged user_journey"
+        tests:
+          - not_null
+      - name: product_id
+        description: "Product identifier from staged user_journey"
         tests:
           - not_null
       - name: timestamp
-        description: "Timestamp of the event"
+        description: "Timestamp of the event from staged user_journey"
         tests:
           - not_null
       - name: has_qv
-        description: "Boolean flag indicating whether the user has viewed the product"
+        description: "Indicates if the product was quick viewed"
       - name: has_pdp
-        description: "Boolean flag indicating whether the user has viewed the product detail page"
+        description: "Indicates if the product detail page was viewed"
       - name: has_atc
-        description: "Boolean flag indicating whether the user has added to cart"
+        description: "Indicates if the product was added to cart"
       - name: has_purchase
-        description: "Boolean flag indicating whether the user has made a purchase"
-      - name: session_id
-        description: "Session identifier for the user interaction"
+        description: "Indicates if the product was purchased"
+
+
+  - name: fact_search_metric_SX
+    columns:
+      - name: user_id
+        description: "user identifier from staged user_journey"
+      - name: search_event_id
+        description: "user search event identifier from staged user_journey"
+      - name: product_id
+        description: "user product identifier from staged user_journey"
+      - name: event_hour
+        description: "user event hour from staged user_journey"
+      - name: search_type
+        description: "user search type from staged user_journey"
+      - name: search_terms
+        description: "user search terms from staged user_journey"
+      - name: search_terms_type
+        description: "user search terms type from staged user_journey"
+      - name: search_model
+        description: "user search model from staged user_journey"
+      - name: search_feature
+        description: "user search feature from staged user_journey"
+      - name: search_results_count
+        description: "user search results count from staged user_journey"
+      - name: has_atc
+        description: "user has added to cart from staged user_journey"
+      - name: has_purchase
+        description: "user has purchased from staged user_journey"
+
+  - name: fact_product_aggregate_SX
+    columns:
+      - name: product_id
+        description: "Product identifier"
+      - name: event_date
+        description: "Date of product daily aggregate data"
+      - name: search_count
+        description: "Number of times the product was searched per day"
         tests:
           - not_null
+      - name: atc_count
+        description: "Number of times the product was added to cart per day"
+        tests:
+          - not_null
+      - name: amount_sold
+        description: "Total amount of the product sold per day"
+        tests:
+          - not_null
+      - name: pdp_view_count
+        description: "Number of times the product detail page was viewed per day"
+        tests:
+          - not_null
+      - name: qv_view_count
+        description: "Number of times the product was quick viewed per day"
+        tests:
+          - not_null
+      - name: no_engagement_count
+        description: "Number of times the product had no pdp view and atc activity per day"
+        tests:
+          - not_null
+      - name: purchase_from_pdp_count
+        description: "Number of times the product was purchased after viewing the product detail page per day"
+        tests:
+          - not_null
+
+  - name: fact_campaign_effect_SX
+    columns:
+      - name: user_id
+        description: "user identifier"
+      - name: search_event_id
+        description: "user search event identifier"
+      - name: session_id
+        description: "user session identifier"
+      - name: product_id
+        description: "user product identifier"
+      - name: event_hour
+        description: "user event hour"
+      - name: mkt_campaign
+        description: "user marketing campaign"
+      - name: mkt_source
+        description: "user marketing source"
+      - name: mkt_medium
+        description: "user marketing medium"
+      - name: mkt_content
+        description: "user marketing content"
+      - name: has_atc
+        description: "Whether the user added this product in this session into cart"
+      - name: has_purchase
+        description: "Whether the user purchased this product in this session"
