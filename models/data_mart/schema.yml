@@ -1,0 +1,289 @@
+version: 2
+
+models:
+
+  - name: fact_user_journey
+    description: "Fact table capturing user interactions with products."
+    columns:
+      - name: user_id
+        description: "Foreign key to DimUser table, identifies the user."
+        tests:
+          - not_null
+      - name: product_id
+        description: "Foreign key to DimProduct table, identifies the product."
+        tests:
+          - not_null
+      - name: session_id
+        description: "Foreign key to DimSession table, identifies the session."
+        tests:
+          - not_null
+      - name: event_timestamp
+        description: "Exact timestamp of the user interaction event."
+        tests:
+          - not_null
+      - name: date_id
+        description: "Foreign key to DimDate table, derived from event_timestamp."
+        tests:
+          - not_null
+      - name: has_qv
+        description: "Flag indicating whether the product was Quick Viewed."
+        tests:
+          - not_null
+      - name: has_atc
+        description: "Flag indicating whether the product was added to cart."
+        tests:
+          - not_null
+      - name: has_pdp
+        description: "Flag indicating whether the product detail page was viewed."
+        tests:
+          - not_null
+      - name: has_purchase
+        description: "Flag indicating whether the product was purchased."
+        tests:
+          - not_null
+      - name: cart_id
+        description: "Identifier for the cart in which the product was added."
+      - name: campaign_id
+        description: "Foreign key to DimCampaign table, identifies marketing campaign."
+      - name: geo_id
+        description: "Foreign key to DimGeo table, identifies the user's geographic location."
+
+  - name: fact_product_performance
+    description: "Fact table aggregating product-level metrics."
+    columns:
+      - name: product_id
+        description: "Foreign key to DimProduct table."
+        tests:
+          - not_null
+      - name: date_id
+        description: "Foreign key to DimDate table, derived from event timestamp."
+        tests:
+          - not_null
+      - name: total_views
+        description: "Total count of Quick View events for the product."
+        tests:
+          - not_null
+      - name: total_atc
+        description: "Total count of Add To Cart events for the product."
+        tests:
+          - not_null
+      - name: total_purchase
+        description: "Total count of Purchase events for the product."
+        tests:
+          - not_null
+
+  - name: fact_campaign_performance
+    description: "Fact table aggregating campaign-level metrics."
+    columns:
+      - name: campaign_id
+        description: "Foreign key to DimCampaign table."
+        tests:
+          - not_null
+      - name: date_id
+        description: "Foreign key to DimDate table, derived from event timestamp."
+        tests:
+          - not_null
+      - name: impressions
+        description: "Total number of events (views) associated with the campaign."
+        tests:
+          - not_null
+      - name: total_atc
+        description: "Total count of Add To Cart events attributed to the campaign."
+        tests:
+          - not_null
+      - name: total_purchase
+        description: "Total count of Purchase events attributed to the campaign."
+        tests:
+          - not_null
+
+  - name: fact_inventory
+    description: "Fact table capturing inventory snapshot metrics."
+    columns:
+      - name: warehouse_id
+        description: "Foreign key to DimWarehouse table, identifies the warehouse."
+        tests:
+          - not_null
+      - name: product_id
+        description: "Foreign key to DimProduct table."
+        tests:
+          - not_null
+      - name: snapshop_date
+        description: "Timestamp of the inventory snapshot (from last_audit_date)."
+        tests:
+          - not_null
+      - name: date_id
+        description: "Foreign key to DimDate table, derived from snapshop_date."
+        tests:
+          - not_null
+      - name: stock_level
+        description: "Current stock level of the product."
+      - name: quantity_in_stock
+        description: "Quantity of product available in stock."
+      - name: reorder_level
+        description: "Threshold at which the product should be reordered."
+      - name: average_monthly_demand
+        description: "Average demand of the product per month."
+      - name: inventory_status
+        description: "Status of inventory, e.g., instock or backordered."
+      - name: next_restock_date_id
+        description: "Date of next restock, foreign key to DimDate."
+
+  - name: dimUser
+    description: "Dimension table with user details."
+    columns:
+      - name: user_id
+        description: "Primary key for the DimUser table."
+        tests:
+          - not_null
+      - name: first_name
+        description: "First name of the user."
+      - name: last_name
+        description: "Last name of the user."
+      - name: email
+        description: "Email address of the user; validated for correct format."
+      - name: dob
+        description: "Date of birth of the user."
+      - name: signup_date
+        description: "Date the user signed up."
+      - name: account_status
+        description: "Status of the user's account (active/inactive)."
+      - name: marketing_opt_in
+        description: "Flag indicating if the user has opted in for marketing."
+      - name: preferred_language
+        description: "User's preferred language."
+      - name: loyalty_points_balance
+        description: "Current balance of the user's loyalty points."
+
+  - name: dimProduct
+    description: "Dimension table with product details."
+    columns:
+      - name: product_id
+        description: "Primary key."
+        tests:
+          - not_null
+      - name: product_name
+        description: "Name of the product."
+      - name: product_category
+        description: "Category to which the product belongs."
+      - name: product_color
+        description: "Color of the product."
+      - name: price
+        description: "Price of the product."
+      - name: discount_percentage
+        description: "Discount applied on the product."
+      - name: supplier_id
+        description: "Identifier of the supplier."
+      - name: warranty_period
+        description: "Warranty period for the product."
+      - name: weight_grams
+        description: "Weight of the product in grams."
+      - name: expiration_date
+        description: "Expiry date of the product."
+      - name: manufacturing_date
+        description: "Date the product was manufactured."
+      - name: rating
+        description: "Average customer rating of the product."
+
+  - name: dimSession
+    description: "Dimension table with session details."
+    columns:
+      - name: session_id
+        description: "Primary key for DimSession."
+        tests:
+          - not_null
+      - name: user_id
+        description: "Foreign key to DimUser table."
+      - name: session_start_timestamp
+        description: "Timestamp when the session started."
+      - name: session_end_timestamp
+        description: "Timestamp when the session ended."
+      - name: login_status
+        description: "Indicates if the user was logged in during the session."
+      - name: app_id
+        description: "App platform used (Android/iOS)."
+      - name: device_class
+        description: "Device type used (desktop/mobile)."
+      - name: page_language
+        description: "Language setting of the session pages."
+      - name: shopping_mode
+        description: "Shopping mode selected by the user."
+
+  - name: dimCampaign
+    description: "Dimension table with campaign details."
+    columns:
+      - name: campaign_id
+        description: "Primary key for DimCampaign."
+        tests:
+          - not_null
+      - name: campaign_name
+        description: "Name of the campaign."
+      - name: marketing_medium
+        description: "Medium of the marketing campaign."
+      - name: marketing_content
+        description: "Content type of the marketing campaign."
+      - name: marketing_source
+        description: "Source channel of the marketing campaign."
+      - name: banner
+        description: "Banner used in the campaign."
+
+  - name: dimDate
+    description: "Dimension table with standard date details."
+    columns:
+      - name: date_id
+        description: "Primary key, surrogate key for each date."
+        tests:
+          - not_null
+      - name: full_date
+        description: "Full date (YYYY-MM-DD)."
+      - name: year
+        description: "Year component of the date."
+      - name: quarter
+        description: "Quarter of the year (1-4)."
+      - name: month
+        description: "Month component of the date (1-12)."
+      - name: day
+        description: "Day of the month (1-31)."
+      - name: day_of_week
+        description: "Day of the week (1=Sunday, 7=Saturday)."
+      - name: week_of_year
+        description: "Week number within the year."
+      - name: is_weekend
+        description: "Boolean flag indicating if the date is a weekend."
+
+  - name: dimGeo
+    description: "Dimension table with geographic details."
+    columns:
+      - name: geo_id
+        description: "Primary key, surrogate key for geographic locations."
+        tests:
+          - not_null
+      - name: country
+        description: "Country of the location."
+      - name: region
+        description: "Region or state of the location."
+      - name: city
+        description: "City of the location."
+      - name: zipcode
+        description: "Postal code of the location."
+      - name: timezone
+        description: "Timezone of the location."
+      - name: latitude
+        description: "Latitude coordinate of the location."
+      - name: longitude
+        description: "Longitude coordinate of the location."
+
+  - name: dimWarehouse
+    description: "Dimension table with warehouse details."
+    columns:
+      - name: warehouse_id
+        description: "Primary key of the warehouse."
+        tests:
+          - not_null
+      - name: storage_condition
+        description: "Type of storage conditions in the warehouse."
+      - name: last_restock_date
+        description: "Date of last restock in the warehouse."
+      - name: safety_stock
+        description: "Safety stock level maintained for products."
+      - name: rating
+        description: "Warehouse rating or performance metric."
