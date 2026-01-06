@@ -209,7 +209,7 @@ models:
         description: "Minimum price of items in transaction"
       - name: max_price
         description: "Maximum price of items in transaction"
-  - name: fact_conversion_funnel
+- name: fact_conversion_funnel
     description: "Fact table tracking conversion funnel metrics by date and product, including ATC rate"
     columns:
       - name: funnel_date
