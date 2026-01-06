@@ -11,7 +11,7 @@ with base as (
         inv.warehouse_id,
         inv.product_id,
         inv.last_audit_date as snapshop_date,
-        CAST(TO_CHAR(uj.last_audit_date,'YYYYMMDD')as INTEGER) as date_id,
+        CAST(TO_CHAR(inv.last_audit_date,'YYYYMMDD')as INTEGER) as date_id,
         inv.stock_level,
         inv.quantity_in_stock,
         inv.reorder_level,

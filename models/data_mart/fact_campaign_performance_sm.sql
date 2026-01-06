@@ -9,19 +9,17 @@
 with base as (
     SELECT
         uj.mkt_campaign as campaign_id,
-        CAST(TO_CHAR(uj.timestamp,'YYYYMMDD')as INTEGER) as date_id,
+        TO_NUMBER(TO_CHAR(uj.timestamp,'YYYYMMDD')) as date_id,
         count(*) as impressions,
-        sum(case when uj.has_atc = TRUE then 1 else 0) as total_atc,
-        sum(case when uj.has_purchase = TRUE then 1 else 0) as total_purchase
-       
-       
-        
+        sum(case when uj.has_atc = TRUE then 1 else 0 END) as total_atc,
+        sum(case when uj.has_purchase = TRUE then 1 else 0 END) as total_purchase
     from {{ source('de_project', 'user_journey') }} uj
 
 --
     GROUP BY
         uj.mkt_campaign,
-        CAST(TO_CHAR(uj.timestamp, 'YYYYMMDD') AS INTEGER)
+        TO_NUMBER(TO_CHAR(uj.timestamp,'YYYYMMDD'))
+
 
 )
 

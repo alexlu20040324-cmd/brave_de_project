@@ -19,14 +19,10 @@ with base as (
         uj.has_purchase,
         uj.cart_id,
         uj.mkt_campaign as campaign_id,
-        --below will be used to change as geo_id
-        uj.geo_country,
-        uj.geo_region,
-        uj.geo_city
         dg.geo_id
     from {{ source('de_project', 'user_journey') }} uj
 
-    LEFT JOIN {{ ref('dim_geo') }} dg
+    LEFT JOIN {{ ref('dimgeo_sm') }} dg
     ON  uj.geo_country   = dg.country
     AND uj.geo_region    = dg.region
     AND uj.geo_city      = dg.city

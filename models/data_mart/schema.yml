@@ -2,7 +2,7 @@ version: 2
 
 models:
 
-  - name: fact_user_journey
+  - name: fact_search_effectiveness_sm
     description: "Fact table capturing user interactions with products."
     columns:
       - name: user_id
@@ -48,7 +48,7 @@ models:
       - name: geo_id
         description: "Foreign key to DimGeo table, identifies the user's geographic location."
 
-  - name: fact_product_performance
+  - name: fact_product_performance_sm
     description: "Fact table aggregating product-level metrics."
     columns:
       - name: product_id
@@ -72,7 +72,7 @@ models:
         tests:
           - not_null
 
-  - name: fact_campaign_performance
+  - name: fact_campaign_performance_sm
     description: "Fact table aggregating campaign-level metrics."
     columns:
       - name: campaign_id
@@ -96,7 +96,7 @@ models:
         tests:
           - not_null
 
-  - name: fact_inventory
+  - name: fact_inventory_sm
     description: "Fact table capturing inventory snapshot metrics."
     columns:
       - name: warehouse_id
@@ -128,7 +128,7 @@ models:
       - name: next_restock_date_id
         description: "Date of next restock, foreign key to DimDate."
 
-  - name: dimUser
+  - name: dimuser_sm
     description: "Dimension table with user details."
     columns:
       - name: user_id
@@ -154,7 +154,7 @@ models:
       - name: loyalty_points_balance
         description: "Current balance of the user's loyalty points."
 
-  - name: dimProduct
+  - name: dimproduct_sm
     description: "Dimension table with product details."
     columns:
       - name: product_id
@@ -184,7 +184,7 @@ models:
       - name: rating
         description: "Average customer rating of the product."
 
-  - name: dimSession
+  - name: dimsession_sm
     description: "Dimension table with session details."
     columns:
       - name: session_id
@@ -208,7 +208,7 @@ models:
       - name: shopping_mode
         description: "Shopping mode selected by the user."
 
-  - name: dimCampaign
+  - name: dimcampaign_sm
     description: "Dimension table with campaign details."
     columns:
       - name: campaign_id
@@ -226,7 +226,7 @@ models:
       - name: banner
         description: "Banner used in the campaign."
 
-  - name: dimDate
+  - name: dimdate_sm
     description: "Dimension table with standard date details."
     columns:
       - name: date_id
@@ -250,7 +250,7 @@ models:
       - name: is_weekend
         description: "Boolean flag indicating if the date is a weekend."
 
-  - name: dimGeo
+  - name: dimgeo_sm
     description: "Dimension table with geographic details."
     columns:
       - name: geo_id
@@ -272,7 +272,7 @@ models:
       - name: longitude
         description: "Longitude coordinate of the location."
 
-  - name: dimWarehouse
+  - name: dimwarehouse_sm
     description: "Dimension table with warehouse details."
     columns:
       - name: warehouse_id

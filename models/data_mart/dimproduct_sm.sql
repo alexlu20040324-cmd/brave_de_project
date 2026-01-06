@@ -28,4 +28,4 @@ with product_data as(
 
 )
 
-select * from user_data
+select * from product_data
