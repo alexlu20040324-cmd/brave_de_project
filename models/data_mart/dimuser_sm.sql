@@ -20,7 +20,7 @@ with user_data as(
     u.preferred_language,
     loyalty_points_balance
 
-    from {{ source('de_project', 'user_data') }} u
+    from {{ ref('stg_user_data_sm') }} u
 
 
 )

@@ -20,7 +20,7 @@ with base as (
         uj.cart_id,
         uj.mkt_campaign as campaign_id,
         dg.geo_id
-    from {{ source('de_project', 'user_journey') }} uj
+    from {{ ref('stg_user_journey_sm') }} uj
 
     LEFT JOIN {{ ref('dimgeo_sm') }} dg
     ON  uj.geo_country   = dg.country

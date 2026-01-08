@@ -16,7 +16,7 @@ with distinct_geo as (
         uj.geo_timezone  AS timezone,
         uj.geo_latitude  AS latitude,
         uj.geo_longitude AS longitude
-    FROM {{ source('de_project','user_journey') }} uj
+    FROM {{ ref('stg_user_journey_sm') }} uj
 
 ),
 

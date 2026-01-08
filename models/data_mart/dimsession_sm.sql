@@ -19,7 +19,7 @@ with session_data as (
         uj.page_language,                
         uj.shopping_mode                 
 
-    FROM {{ source('de_project','user_journey') }} uj
+    FROM {{ ref('stg_user_journey_sm') }} uj
 
     GROUP BY
         uj.session_id,

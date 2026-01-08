@@ -16,7 +16,7 @@ with campaign_data as (
         uj.mkt_source AS marketing_source,
         uj.banner     
 
-    FROM {{ source('de_project','user_journey') }} uj
+    FROM {{ ref('stg_user_journey_sm') }} uj
 )
 
 select * from campaign_data

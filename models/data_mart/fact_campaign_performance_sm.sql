@@ -13,7 +13,7 @@ with base as (
         count(*) as impressions,
         sum(case when uj.has_atc = TRUE then 1 else 0 END) as total_atc,
         sum(case when uj.has_purchase = TRUE then 1 else 0 END) as total_purchase
-    from {{ source('de_project', 'user_journey') }} uj
+    from {{ ref('stg_user_journey_sm') }} uj
 
 --
     GROUP BY

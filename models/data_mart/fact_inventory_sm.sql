@@ -17,19 +17,19 @@ with base as (
         inv.reorder_level,
         inv.average_monthly_demand,
         inv.inventory_status,
-        inv.next_restock_date as next_restock_date_id
+        inv.next_restock_date_id
        
        
         
-    from {{ source('de_project', 'inventory_data') }} inv
+    from {{ ref('stg_inventory_sm') }} inv
 
-    {% if is_incremental() %}
-      -- Only process new inventory snapshots
-      WHERE inv.last_audit_date > (
-          SELECT MAX(snapshot_date)
-          FROM {{ this }}
-      )
-    {% endif %}
+    -- {% if is_incremental() %}
+    --   -- Only process new inventory snapshots
+    --   WHERE inv.last_audit_date > (
+    --       SELECT MAX(snapshot_date)
+    --       FROM {{ this }}
+    --   )
+    -- {% endif %}
 )
 
 select * from base

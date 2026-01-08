@@ -14,7 +14,7 @@ with warehouse_data as (
         war.last_restock_date,
         war.safety_stock,
         war.rating
-    FROM {{ source('de_project','inventory_data') }} war
+    FROM {{ ref('stg_inventory_sm')}} war
 
 )
 

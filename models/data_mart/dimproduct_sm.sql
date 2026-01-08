@@ -23,7 +23,7 @@ with product_data as(
     p.rating
     
 
-    from {{ source('de_project', 'product_data') }} p
+    from {{ ref('stg_product_data_sm') }} p
 
 
 )
