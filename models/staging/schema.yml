@@ -1,0 +1,249 @@
+version: 2
+
+models:
+
+  - name: stg_user_journey_sm
+    description: 
+      Cleaned and standardized user interaction events derived from the raw
+      user_journey source table. This table represents the atomic event-level
+      data used to derive Gold-layer fact and dimension tables.
+
+    columns:
+      - name: user_id
+        description: "Unique identifier of the user performing the event."
+        tests:
+          - not_null
+
+      - name: product_id
+        description: "Unique identifier of the product associated with the event."
+
+      - name: session_id
+        description: "Identifier representing a user session."
+
+      - name: timestamp
+        description: "Timestamp when the user interaction event occurred."
+        tests:
+          - not_null
+
+      - name: has_qv
+        description: "Boolean flag indicating whether the event involved a quick view."
+
+      - name: has_pdp
+        description: "Boolean flag indicating whether the event involved a product detail page."
+
+      - name: has_atc
+        description: "Boolean flag indicating whether the product was added to cart."
+
+      - name: has_purchase
+        description: "Boolean flag indicating whether a purchase occurred."
+
+      - name: cart_id
+        description: "Identifier of the cart associated with the event."
+
+      - name: mkt_campaign
+        description: "Marketing campaign identifier captured at the time of the event."
+
+      - name: mkt_medium
+        description: "Marketing medium through which the user arrived."
+
+      - name: mkt_source
+        description: "Marketing source responsible for the traffic."
+
+      - name: mkt_content
+        description: "Marketing content or variation identifier."
+
+      - name: banner
+        description: "Banner or brand context in which the event occurred."
+
+      - name: login_status
+        description: "Indicates whether the user was logged in during the event."
+
+      - name: app_id
+        description: "Application identifier where the event occurred."
+
+      - name: device_class
+        description: "Type of device used by the user (e.g., mobile, desktop)."
+
+      - name: page_language
+        description: "Language of the page viewed during the event."
+
+      - name: shopping_mode
+        description: "Shopping mode associated with the event (e.g., pickup, delivery)."
+
+      - name: geo_country
+        description: "Country from which the event originated."
+
+      - name: geo_region
+        description: "Region or state from which the event originated."
+
+      - name: geo_city
+        description: "City from which the event originated."
+
+      - name: geo_zipcode
+        description: "Postal or ZIP code associated with the event location."
+
+      - name: geo_latitude
+        description: "Latitude of the event location."
+
+      - name: geo_longitude
+        description: "Longitude of the event location."
+
+      - name: geo_timezone
+        description: "Timezone associated with the event location."
+      
+      - name: load_timestamp
+        description: "Timestamp indicating when the record was loaded into the Silver layer."
+
+
+  - name: stg_product_data_sm
+    description: 
+      Cleaned and standardized product master data derived from the raw
+      product_data source table. Used to populate Gold-layer product dimensions.
+
+    columns:
+      - name: product_id
+        description: "Unique identifier for the product."
+        tests:
+          - not_null
+
+      - name: product_name
+        description: "Name of the product."
+
+      - name: product_category
+        description: "Category to which the product belongs."
+
+      - name: product_color
+        description: "Color attribute of the product."
+
+      - name: price
+        description: "Retail price of the product."
+
+      - name: discount_percentage
+        description: "Discount percentage applied to the product."
+
+      - name: supplier_id
+        description: "Identifier of the supplier providing the product."
+
+      - name: warranty_period
+        description: "Warranty duration associated with the product."
+
+      - name: weight_grams
+        description: "Weight of the product in grams."
+
+      - name: expiration_date
+        description: "Date when the product expires."
+
+      - name: manufacturing_date
+        description: "Date when the product was manufactured."
+
+      - name: rating
+        description: "Customer rating assigned to the product."
+
+
+  - name: stg_user_data_sm
+    description: 
+      Cleaned and standardized user master data derived from the raw
+      user_data source table. Used to populate Gold-layer user dimensions.
+
+    columns:
+      - name: user_id
+        description: "Unique identifier for the user."
+        tests:
+          - not_null
+
+      - name: first_name
+        description: "First name of the user."
+
+      - name: last_name
+        description: "Last name of the user."
+
+      - name: email
+        description: "Email address of the user."
+
+      - name: dob
+        description: "Date of birth of the user."
+
+      - name: signup_date
+        description: "Date when the user signed up."
+
+      - name: account_status
+        description: "Current status of the user account."
+
+      - name: marketing_opt_in
+        description: "Indicates whether the user opted in for marketing communication."
+
+      - name: preferred_language
+        description: "Preferred language selected by the user."
+
+      - name: loyalty_points_balance
+        description: "Current loyalty points balance of the user."
+
+      - name: load_timestamp
+        description: "Timestamp indicating when the record was loaded into the staging layer."
+
+
+  - name: stg_inventory_sm
+    description: 
+      Cleaned and standardized inventory snapshot data derived from the raw
+      inventory_data source table. Used to build Gold-layer inventory facts
+      and warehouse dimensions.
+
+    columns:
+      - name: warehouse_id
+        description: "Unique identifier of the warehouse where inventory is stored."
+        tests:
+          - not_null
+
+      - name: product_id
+        description: "Unique identifier of the product stored in the warehouse."
+        tests:
+          - not_null
+
+      - name: last_audit_date
+        description: "Timestamp indicating when the inventory audit was performed."
+
+      - name: date_id
+        description: >
+          Surrogate date key in YYYYMMDD format derived from last_audit_date.
+          Used for joining with the Date dimension in the Gold layer.
+        tests:
+          - not_null
+
+      - name: stock_level
+        description: "Overall stock level recorded during the inventory audit."
+
+      - name: quantity_in_stock
+        description: "Number of units currently available in the warehouse."
+
+      - name: reorder_level
+        description: "Inventory threshold at which replenishment should be triggered."
+
+      - name: last_restock_date
+        description: "Date when the product was last restocked in the warehouse."
+
+      - name: average_monthly_demand
+        description: "Estimated average monthly demand for the product."
+
+      - name: inventory_status
+        description: >
+          Normalized inventory status (e.g., In Stock, Backordered) indicating
+          current availability.
+
+      - name: next_restock_date_id
+        description: "Planned date for the next restocking event."
+
+      - name: storage_condition
+        description: >
+          Required storage condition for the product (e.g., Cold, Dry, Frozen).
+
+      - name: safety_stock
+        description: "Minimum buffer stock maintained to prevent stockouts."
+
+      - name: rating
+        description: "Operational or quality rating associated with the inventory or warehouse."
+
+      - name: supplier_id
+        description: "Identifier of the supplier providing the product."
+
+      - name: load_timestamp
+        description: "Timestamp indicating when the record was loaded into the Silver layer."
