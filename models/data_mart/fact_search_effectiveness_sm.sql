@@ -8,6 +8,7 @@
 
 with base as (
     SELECT
+        -- DISTINCT nullif(trim(uj.mkt_campaign),'') AS campaign_id,
         uj.user_id,
         uj.product_id,
         uj.session_id,

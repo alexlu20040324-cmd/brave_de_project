@@ -18,11 +18,8 @@ with user_data as(
     u.account_status,
     u.marketing_opt_in,
     u.preferred_language,
-    loyalty_points_balance
-
+    u.loyalty_points_balance
     from {{ ref('stg_user_data_sm') }} u
-
-
 )
 
 select * from user_data

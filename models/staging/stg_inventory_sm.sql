@@ -41,8 +41,8 @@ cleaned_inventory AS (
         INITCAP(LOWER(inventory_status)) AS inventory_status,
         next_restock_date AS next_restock_date_id,
         INITCAP(LOWER(storage_condition)) AS storage_condition,
-        safety_stock,
-        rating,
+        TRY_CAST(REPLACE(safety_stock, ',', '') AS NUMBER(38,0)) AS safety_stock,
+        TRY_CAST(REPLACE(trim(rating), ',', '') AS NUMBER(38,2)) AS rating,
         supplier_id,
         CURRENT_TIMESTAMP() AS load_timestamp
     FROM raw_inventory

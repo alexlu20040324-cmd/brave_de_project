@@ -14,12 +14,19 @@ WITH raw_data AS (
             WHEN email NOT LIKE '%_@__%.__%' THEN NULL 
             ELSE TRIM(email) 
         END AS email,
-        dob,                       
-        signup_date,               
+        TRY_CAST(dob AS DATE) AS dob,                       
+        TRY_CAST(signup_date AS DATE) AS signup_date, 
         TRIM(account_status) AS account_status,
-        marketing_opt_in,           
+        COALESCE(
+        CASE 
+            WHEN LOWER(marketing_opt_in) = 'true' THEN TRUE
+            WHEN LOWER(marketing_opt_in) = 'false' THEN FALSE
+            ELSE NULL
+        END,
+        FALSE
+        ) AS marketing_opt_in,    
         TRIM(preferred_language) AS preferred_language,
-        loyalty_points_balance      
+        TRY_CAST(loyalty_points_balance AS NUMBER(18,1)) AS loyalty_points_balance
     FROM {{ source('de_project','user_data') }}
 ),
 
@@ -28,6 +35,14 @@ cleaned AS (
         *,
         CURRENT_TIMESTAMP() AS load_timestamp
     FROM raw_data
+    WHERE user_id IS NOT NULL
+      AND first_name IS NOT NULL
+      AND last_name IS NOT NULL
+      AND dob IS NOT NULL
+      AND signup_date IS NOT NULL
+      AND loyalty_points_balance IS NOT NULL
+    --   -- logical consistency
+    --   AND TRY_CAST(dob AS DATE) <= TRY_CAST(signup_date AS DATE)
 )
 
 SELECT * FROM cleaned

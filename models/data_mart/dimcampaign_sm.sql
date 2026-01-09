@@ -9,8 +9,7 @@
 with campaign_data as (
 
     SELECT
-        uj.mkt_campaign AS campaign_id,       
-        uj.mkt_campaign AS campaign_name,     
+        DISTINCT nullif(trim(uj.mkt_campaign),'') AS campaign_id,          
         uj.mkt_medium AS marketing_medium,    
         uj.mkt_content AS marketing_content,  
         uj.mkt_source AS marketing_source,
@@ -20,3 +19,4 @@ with campaign_data as (
 )
 
 select * from campaign_data
+where campaign_id is NOT NULL

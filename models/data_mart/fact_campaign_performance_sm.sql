@@ -14,6 +14,7 @@ with base as (
         sum(case when uj.has_atc = TRUE then 1 else 0 END) as total_atc,
         sum(case when uj.has_purchase = TRUE then 1 else 0 END) as total_purchase
     from {{ ref('stg_user_journey_sm') }} uj
+    WHERE uj.mkt_campaign IS NOT NULL
 
 --
     GROUP BY
@@ -24,6 +25,8 @@ with base as (
 )
 
 select * from base
+-- WHERE uj.mkt_campaign IS NOT NULL test
+
 
 
 
