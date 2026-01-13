@@ -1,0 +1,115 @@
+unit_tests:
+  # DIM USER
+
+  - name: test_dim_user_email_validation
+    description: Email should be NULL if format is invalid
+    model: dimuser_sm
+    overrides:
+      macros:
+        is_incremental: false 
+    given:
+      - input: ref('stg_user_data_sm')
+        rows:
+          - user_id: "user_1"
+            first_name: "Test"
+            last_name: "User"
+            email: "invalid-email"
+            dob: "1995-01-01"
+            signup_date: "2023-01-01"
+            account_status: "Active"
+            marketing_opt_in: true
+            preferred_language: "English"
+            loyalty_points_balance: 10.0
+    expect:
+      rows:
+        - user_id: "user_1"
+          email: null
+
+  # DIM CAMPAIGN
+
+  - name: test_dim_campaign_filters_empty_campaigns
+    description: Empty or blank campaign IDs should be excluded
+    model: dimcampaign_sm
+    overrides:
+      macros:
+        is_incremental: false 
+    given:
+      - input: ref('stg_user_journey_sm')
+        rows:
+          - mkt_campaign: ""
+            mkt_medium: "Email"
+            mkt_source: "Google"
+            mkt_content: "Promo"
+            banner: "Banner1"
+    expect:
+      rows: []
+
+  # FACT USER JOURNEY
+
+  - name: test_fact_user_journey_date_id_and_campaign
+    description: date_id should be derived from timestamp and campaign retained
+    model: fact_search_effectiveness_sm
+    overrides:
+      macros:
+        is_incremental: false 
+    given:
+      - input: ref('stg_user_journey_sm')
+        rows:
+          - user_id: "user_1"
+            product_id: "prod-001"
+            session_id: "sess-001"
+            timestamp: "2024-01-15 10:30:00"
+            has_qv: true
+            has_atc: false
+            has_pdp: true
+            has_purchase: false
+            cart_id: "cart-1"
+            mkt_campaign: "Summer_Promo"
+            geo_country: "Canada"
+            geo_region: "Ontario"
+            geo_city: "Toronto"
+            geo_zipcode: "M5H"
+      - input: ref('dimgeo_sm')
+        rows:
+          - geo_id: "geo-1"
+            country: "Canada"
+            region: "Ontario"
+            city: "Toronto"
+            zipcode: "M5H"
+    expect:
+      rows:
+        - user_id: "user_1"
+          product_id: "prod-001"
+          session_id: "sess-001"
+          date_id: 20240115
+          campaign_id: "Summer_Promo"
+          geo_id: "geo-1"
+
+  # FACT PRODUCT PERFORMANCE
+
+  - name: test_fact_product_performance_aggregations
+    description: Validate views, ATC, and purchases aggregation
+    model: fact_product_performance_sm
+    overrides:
+      macros:
+        is_incremental: false 
+    given:
+      - input: ref('stg_user_journey_sm')
+        rows:
+          - product_id: "prod-001"
+            timestamp: "2024-01-10 10:00:00"
+            has_qv: true
+            has_atc: true
+            has_purchase: false
+          - product_id: "prod-001"
+            timestamp: "2024-01-10 12:00:00"
+            has_qv: true
+            has_atc: false
+            has_purchase: true
+    expect:
+      rows:
+        - product_id: "prod-001"
+          date_id: 20240110
+          total_views: 2
+          total_atc: 1
+          total_purchase: 1

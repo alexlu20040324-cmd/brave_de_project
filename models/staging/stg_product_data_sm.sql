@@ -7,19 +7,19 @@
 
 WITH raw_product AS (
     SELECT
-        TRIM(product_id) AS product_id,
-        TRIM(product_name) AS product_name,
-        TRIM(product_category) AS product_category,
-        TRIM(product_color) AS product_color,
-        price,
-        discount_percentage,
-        TRIM(supplier_id) AS supplier_id,
-        warranty_period,
-        weight_grams,
-        expiration_date,
-        manufacturing_date,
-        rating
-    FROM {{ source('de_project', 'product_data') }}
+        TRIM(p.product_id) AS product_id,
+        TRIM(p.product_name) AS product_name,
+        TRIM(p.product_category) AS product_category,
+        TRIM(p.product_color) AS product_color,
+        p.price,
+        p.discount_percentage,
+        TRIM(p.supplier_id) AS supplier_id,
+        p.warranty_period,
+        p.weight_grams,
+        p.expiration_date,
+        p.manufacturing_date,
+        TRY_CAST(rating AS NUMBER(38,1)) AS rating
+    FROM {{ source('de_project', 'product_data') }} p
     WHERE product_id IS NOT NULL
 )
 
