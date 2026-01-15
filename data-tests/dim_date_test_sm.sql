@@ -1,6 +1,6 @@
 WITH date_data AS (
     SELECT *
-    FROM {{ ref('dimdate_sm') }}
+    FROM {{ ref('dim_date_sm') }}
 ),
 
 -- Validate date_id matches full_date (YYYYMMDD)

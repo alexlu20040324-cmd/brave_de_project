@@ -5,7 +5,7 @@ WITH warehouse_data AS (
         last_restock_date,
         safety_stock,
         rating
-    FROM {{ ref('dimwarehouse_sm') }}
+    FROM {{ ref('dim_warehouse_sm') }}
 ),
 
 invalid_warehouse AS (

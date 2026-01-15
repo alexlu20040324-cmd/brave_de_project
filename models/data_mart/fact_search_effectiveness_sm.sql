@@ -23,7 +23,7 @@ with base as (
         dg.geo_id
     from {{ ref('stg_user_journey_sm') }} uj
 
-    LEFT JOIN {{ ref('dimgeo_sm') }} dg
+    LEFT JOIN {{ ref('dim_geo_sm') }} dg
     ON  uj.geo_country   = dg.country
     AND uj.geo_region    = dg.region
     AND uj.geo_city      = dg.city

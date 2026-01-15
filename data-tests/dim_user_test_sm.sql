@@ -1,6 +1,6 @@
 WITH user_data AS (
     SELECT *
-    FROM {{ ref('dimuser_sm') }}
+    FROM {{ ref('dim_user_sm') }}
 ),
 
 -- 1. Check for NULL user_id

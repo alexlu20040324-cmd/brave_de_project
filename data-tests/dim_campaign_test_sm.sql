@@ -6,7 +6,7 @@ WITH campaign_data AS (
         marketing_content,
         marketing_source,
         banner
-    FROM {{ ref('dimcampaign_sm') }}
+    FROM {{ ref('dim_campaign_sm') }}
 
 ),
 

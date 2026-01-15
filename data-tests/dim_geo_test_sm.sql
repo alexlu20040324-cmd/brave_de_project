@@ -1,6 +1,6 @@
 WITH geo_data AS (
     SELECT *
-    FROM {{ ref('dimgeo_sm') }}
+    FROM {{ ref('dim_geo_sm') }}
 ),
 
 -- Check for NULL or empty country, region, city, zipcode

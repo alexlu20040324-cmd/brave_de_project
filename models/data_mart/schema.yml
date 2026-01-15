@@ -128,7 +128,7 @@ models:
       - name: next_restock_date_id
         description: "Date of next restock, foreign key to DimDate."
 
-  - name: dimuser_sm
+  - name: dim_user_sm
     description: "Dimension table with user details."
     columns:
       - name: user_id
@@ -154,7 +154,7 @@ models:
       - name: loyalty_points_balance
         description: "Current balance of the user's loyalty points."
 
-  - name: dimproduct_sm
+  - name: dim_product_sm
     description: "Dimension table with product details."
     columns:
       - name: product_id
@@ -184,7 +184,7 @@ models:
       - name: rating
         description: "Average customer rating of the product."
 
-  - name: dimsession_sm
+  - name: dim_session_sm
     description: "Dimension table with session details."
     columns:
       - name: session_id
@@ -208,7 +208,7 @@ models:
       - name: shopping_mode
         description: "Shopping mode selected by the user."
 
-  - name: dimcampaign_sm
+  - name: dim_campaign_sm
     description: "Dimension table with campaign details."
     columns:
       - name: campaign_id
@@ -226,7 +226,7 @@ models:
       - name: banner
         description: "Banner used in the campaign."
 
-  - name: dimdate_sm
+  - name: dim_date_sm
     description: "Dimension table with standard date details."
     columns:
       - name: date_id
@@ -250,7 +250,7 @@ models:
       - name: is_weekend
         description: "Boolean flag indicating if the date is a weekend."
 
-  - name: dimgeo_sm
+  - name: dim_geo_sm
     description: "Dimension table with geographic details."
     columns:
       - name: geo_id
@@ -272,7 +272,7 @@ models:
       - name: longitude
         description: "Longitude coordinate of the location."
 
-  - name: dimwarehouse_sm
+  - name: dim_warehouse_sm
     description: "Dimension table with warehouse details."
     columns:
       - name: warehouse_id

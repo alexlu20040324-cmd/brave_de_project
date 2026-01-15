@@ -3,7 +3,7 @@ unit_tests:
 
   - name: test_dim_user_email_validation
     description: Email should be NULL if format is invalid
-    model: dimuser_sm
+    model: dim_user_sm
     overrides:
       macros:
         is_incremental: false 
@@ -29,7 +29,7 @@ unit_tests:
 
   - name: test_dim_campaign_filters_empty_campaigns
     description: Empty or blank campaign IDs should be excluded
-    model: dimcampaign_sm
+    model: dim_campaign_sm
     overrides:
       macros:
         is_incremental: false 
