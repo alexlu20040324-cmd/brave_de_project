@@ -28,11 +28,12 @@ seeds:
 
 models:
   brave_de_project:
-    database: BRAVE_DATABASE
-    schema: PROJECT_TEST
+    +database: BRAVE_DATABASE
+    +schema: DE_ALEX
+    staging:
+      +materialized: view
     raw_data:
       +materialized: table
     data_mart:
       +materialized: table
   +copy_grants: true
-

@@ -1,0 +1,15 @@
+unit_tests:
+  - name: test_product_profit_calculation
+    description: "Verify product_profit correctly equals price minus total supply cost."
+    model: dim_products
+    given:
+      - input: ref('stg_products')
+        rows:
+          - {product_sku: "TEST-01", product_name: "Test Item", product_type: "jaffle", product_price: 1000, product_description: "test"}
+      - input: ref('stg_supplies')
+        rows:
+          - {product_sku: "TEST-01", supply_cost: 300}
+          - {product_sku: "TEST-01", supply_cost: 200}
+    expect:
+      rows:
+        - {product_sku: "TEST-01", product_price: 1000, product_cost: 500, product_profit: 500}

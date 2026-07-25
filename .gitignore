@@ -13,3 +13,6 @@ logs/
 
 .ruff_cache
 __pycache__
+
+# Never commit credentials
+profiles.yml

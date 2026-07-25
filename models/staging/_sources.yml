@@ -1,0 +1,20 @@
+version: 2
+
+sources:
+  - name: jaffle_shop
+    database: BRAVE_DATABASE
+    schema: DE_ALEX
+    description: "Raw retail data loaded from the project repository CSVs."
+    tables:
+      - name: raw_customers
+        description: "Customer master data. One row per customer."
+      - name: raw_orders
+        description: "Order header. One row per order."
+      - name: raw_items
+        description: "Order line items. One row per item within an order."
+      - name: raw_products
+        description: "Product catalog including list price."
+      - name: raw_stores
+        description: "Store locations and tax rates."
+      - name: raw_supplies
+        description: "Supply costs. A product SKU can map to multiple supplies."

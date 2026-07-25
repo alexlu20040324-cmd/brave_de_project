@@ -1,0 +1,72 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "Customer dimension. One row per customer."
+    columns:
+      - name: customer_id
+        description: "Primary key for a customer."
+        tests:
+          - unique
+          - not_null
+      - name: customer_name
+        tests:
+          - not_null
+
+  - name: dim_products
+    description: "Product dimension with cost and profit per product."
+    columns:
+      - name: product_sku
+        description: "Primary key for a product."
+        tests:
+          - unique
+          - not_null
+      - name: product_price
+        tests:
+          - not_null
+      - name: product_profit
+        tests:
+          - not_null
+
+  - name: dim_stores
+    description: "Store dimension."
+    columns:
+      - name: store_id
+        tests:
+          - unique
+          - not_null
+
+  - name: fct_orders
+    description: "Order fact table. One row per order."
+    columns:
+      - name: order_id
+        description: "Primary key for an order."
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_id
+      - name: store_id
+        tests:
+          - relationships:
+              to: ref('dim_stores')
+              field: store_id
+
+  - name: fct_order_items
+    description: "Order line item fact table. One row per item per order."
+    columns:
+      - name: order_item_id
+        description: "Primary key for an order line item."
+        tests:
+          - unique
+          - not_null
+      - name: product_sku
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_products')
+              field: product_sku
