@@ -1,3 +1,11 @@
+{{
+  config(
+    materialized='incremental',
+    unique_key='order_item_id',
+    on_schema_change='append_new_columns'
+  )
+}}
+
 with order_items as (
 
     select * from {{ ref('stg_items') }}
@@ -39,3 +47,10 @@ joined as (
 )
 
 select * from joined
+{% if is_incremental() %}
+
+  -- 只处理比"已有数据里最新时间"更新的记录
+  -- 减 3 天是留缓冲窗口，防止迟到数据被漏掉
+  where ordered_at >= (select dateadd(day, -3, max(ordered_at)) from {{ this }})
+
+{% endif %}
